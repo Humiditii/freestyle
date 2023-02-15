@@ -146,8 +146,6 @@ export class ProductController {
         return res.status(201).json(this.resBody(`Category deleted`,200))
     }
 
-    @UseGuards(RoleGuard)
-    @Roles(Role.Admin)
     @Get('category/view')
     async viewCategory(
         @Res() res:Response,
