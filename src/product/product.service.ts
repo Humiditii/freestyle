@@ -33,8 +33,7 @@ export class ProductService {
 
             // this is a filter object used to filter/narrow selection
             const filter = {
-                adminId:getProductsDto.adminId,
-                ...( getProductsDto?.productName ? {productName: {$regex:regex}} : null ),
+                ...( getProductsDto?.search ? {productName: {$regex:regex}} : null ),
                 ...( getProductsDto?.productCategory ? {productCategory: getProductsDto.productCategory } : null)
             }
             // return the products with limits

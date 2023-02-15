@@ -51,8 +51,7 @@ export class ProductController {
             return {
                 search: search ??  null,
                 batch: batch ?? 1,
-                productCategory: productCategory ?? null,
-                adminId: req.user.userId
+                productCategory: productCategory ?? null
             }
         }
 
