@@ -152,7 +152,7 @@ export class ProductController {
         @Req() req:any
     ):Promise<Response>{
 
-        const data:Awaited<object> = await this.productService.viewCategory(req.user.userId)
+        const data:Awaited<object> = await this.productService.viewCategory()
 
         return res.status(201).json(this.resBody('Category fetched!',200,data))
     }

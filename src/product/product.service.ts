@@ -115,9 +115,9 @@ export class ProductService {
         }
     }
 
-    async viewCategory(adminId:string):Promise<any>{
+    async viewCategory():Promise<any>{
         try {
-            return await this.categoryModel.find({ adminId: adminId }).lean()
+            return await this.categoryModel.find().lean()
         } catch (error) {
             throw new HttpException(error?.message ? error.message : this.ISE,
                 error?.status ? error.status : 500)
