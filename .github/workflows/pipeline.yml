@@ -1,0 +1,19 @@
+name: mainstack-assess
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  Node-deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy to main branch
+      uses: appleboy/ssh-action@master
+      with:
+          username: ubuntu
+          host: ${{ secrets.HOST }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: cd /var/www/html/mainstack-asses && sudo sh deployer.sh
