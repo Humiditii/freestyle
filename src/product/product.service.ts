@@ -1,15 +1,17 @@
 import { HttpException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Product, ProductDocument } from "./schema/product.schema";
-import { CreateProductDto, EditProductDto, GetProductsDto, QuantityDto } from "./dto/product.dto";
+import { CategoryDto, CreateProductDto, EditProductDto, GetProductsDto, QuantityDto } from "./dto/product.dto";
 import { Model } from "mongoose";
 import { Err } from "src/common/interfaces/interfaces";
+import { Category, CategoryDocument } from "./schema/category.schema";
 
 @Injectable()
 export class ProductService {
 
     constructor(
-        @InjectModel(Product.name) private productModel:Model<ProductDocument>
+        @InjectModel(Product.name) private productModel:Model<ProductDocument>,
+        @InjectModel(Category.name) private categoryModel:Model<CategoryDocument>
     ){}
 
     private readonly ISE: string = 'Internal server error';
@@ -98,10 +100,44 @@ export class ProductService {
         }
     }
 
+    async createProductCategory(categoryDto:CategoryDto):Promise<Category>{
+        try {
+            if( await this.categoryModel.findOne(categoryDto).exec() ){
+                const err:Err = {
+                    message: 'Invalid category, category exist for this admin!',
+                    status: 400
+                }
+                throw new HttpException(err.message, err.status)
+            }
+            return await this.categoryModel.create(categoryDto)
+        } catch (error) {
+            throw new HttpException(error?.message ? error.message : this.ISE,
+                error?.status ? error.status : 500)
+        }
+    }
+
+    async viewCategory(adminId:string):Promise<any>{
+        try {
+            return await this.categoryModel.find({ adminId: adminId }).lean()
+        } catch (error) {
+            throw new HttpException(error?.message ? error.message : this.ISE,
+                error?.status ? error.status : 500)
+        }
+    }
+
+    async deleteCategory(categoryId:string):Promise<void>{
+        try {
+            await this.categoryModel.findByIdAndDelete(categoryId)
+        } catch (error) {
+            throw new HttpException(error?.message ? error.message : this.ISE,
+                error?.status ? error.status : 500)   
+        }
+    }
+
     // this is used to calculate the pagination
     private skipperFunc(unit:number,batch:number=1):number{
         // ReLU function
         return Math.max(0, (unit*batch) - unit )
-      }
+    }
 
 }

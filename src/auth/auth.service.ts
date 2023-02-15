@@ -86,7 +86,8 @@ export class AuthService {
         token:this.jwtService.sign(payload),
         user:{
           firstname:user?.firstname ?? '',
-          lastname: user?.lastname ?? ''
+          lastname: user?.lastname ?? '',
+          role: user.role
         }
       }
 

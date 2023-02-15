@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, Res, UseGuards } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { Response } from "express";
-import { CreateProductDto, EditProductDto, GetProductsDto, QuantityDto } from "./dto/product.dto";
+import { CategoryDto, CreateProductDto, EditProductDto, GetProductsDto, QuantityDto } from "./dto/product.dto";
 import { MainStackRes } from "../common/interfaces/interfaces";
 import { JwtAuthGuard } from "../guard/jwt.guard";
 import { RoleGuard } from "../guard/roles.guard";
@@ -117,4 +117,46 @@ export class ProductController {
 
         return res.status(201).json(this.resBody('Product quantity incremented',200,data))
     }
+
+    @UseGuards(RoleGuard)
+    @Roles(Role.Admin)
+    @Post('category/create')
+    async createCategory(
+        @Body() categoryDto:CategoryDto,
+        @Res() res:Response,
+        @Req() req:any
+    ):Promise<Response>{
+
+        categoryDto.adminId = req.user.userId
+
+        const data:Awaited<object> = await this.productService.createProductCategory(categoryDto)
+
+        return res.status(201).json(this.resBody('A new category added!',201,data))
+    }
+
+    @UseGuards(RoleGuard)
+    @Roles(Role.Admin)
+    @Delete('category/delete/:categoryId')
+    async deleteCategory(
+        @Res() res:Response,
+        @Param('categoryId') categoryId:string
+    ):Promise<Response>{
+
+        await this.productService.deleteCategory(categoryId)
+
+        return res.status(201).json(this.resBody(`Category deleted`,200))
+    }
+
+    @Get('category/view')
+    async viewCategory(
+        @Res() res:Response,
+        @Req() req:any
+    ):Promise<Response>{
+
+        const data:Awaited<object> = await this.productService.viewCategory(req.user.userId)
+
+        return res.status(201).json(this.resBody('Category fetched!',200,data))
+    }
+
+
 }

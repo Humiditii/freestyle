@@ -22,3 +22,8 @@ export class QuantityDto {
     readonly amount:number
     productId:string
 }
+
+export class CategoryDto {
+    readonly categoryName:string
+    adminId:string
+}
