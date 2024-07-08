@@ -16,4 +16,4 @@ jobs:
           username: ubuntu
           host: ${{ secrets.HOST }}
           key: ${{ secrets.PRIVATE_KEY }}
-          script: cd /var/www/html/mainstack-asses && sudo sh deployer.sh
+          script: cd /var/www/html/{{dir}} && sudo sh deployer.sh

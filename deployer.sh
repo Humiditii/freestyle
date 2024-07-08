@@ -6,8 +6,8 @@ git pull origin main
 
 npm install
 
-pm2 stop mainstack-assess
+pm2 stop app-1
 
 npm run build
 
-pm2 restart mainstack-assess
+pm2 restart app-1
